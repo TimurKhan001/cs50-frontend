@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <meta name="viewport" content="user-scalable=0">
+    <meta charset="utf-8" />
+    <title>Photo App</title>
+  </head>
+  <body>
+      <div id="photo-booth"></div>
+    <%
+        for (key in htmlWebpackPlugin.files.js) {
+            if (htmlWebpackPlugin.files.js[key] === 'embed.js') {
+    %>
+        <script>
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const lang = urlParams.get('lang');
+
+        const newScript = document.createElement("script");
+
+        newScript.src = '/embed.js';
+        newScript.setAttribute('data-lang', lang || 'en');
+        newScript.id = 'photo-booth-app';
+
+        document.getElementById('photo-booth').appendChild(newScript);
+
+    </script>
+    <% } else { %>
+        <script
+            defer="defer"
+            src="<%= htmlWebpackPlugin.files.js[key] %>"
+        ></script>
+    <% }} %>
+  </body>
+</html>

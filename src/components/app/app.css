@@ -1,0 +1,138 @@
+/* stylelint-disable a11y/content-property-no-static-value */
+@import '../../assets/styles/fonts.css';
+
+:global {
+    width: 100% !important;
+
+    * {
+        box-sizing: border-box !important;
+        color: rgb(50, 50, 50);
+        font-family: 'Cera Pro', Arial, sans-serif !important;
+        letter-spacing: initial !important;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        font-size: 62.5%;
+    }
+
+    div,
+    button {
+        outline: 0 !important;
+    }
+
+    a,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        vertical-align: baseline !important;
+        background: none !important;
+        font-family: 'Cera Pro', Arial, sans-serif !important;
+        font-weight: bold;
+        outline: 0 !important;
+        border: none !important;
+    }
+}
+
+.app {
+    width: 100%;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    background: #e7e8ea;
+}
+
+.desktop {
+    --move: 4px;
+    width: 100%;
+    height: 100%;
+    /* padding: 5vw; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    h1 {
+        display: inline;
+        position: relative;
+        z-index: 1;
+        color: rgba(0, 0, 255, 1);
+        font-size: 6em;
+        font-weight: 900;
+        letter-spacing: -5px;
+        text-transform: uppercase;
+
+        &::after {
+            position: absolute;
+            top: 0;
+            left: var(--move);
+            z-index: 2;
+            content: 'PHOTO.BOOTH';
+            color: rgba(255, 0, 0, .5);
+            animation: moveLeft 2s infinite;
+        }
+
+        &::before {
+            position: absolute;
+            top: 0;
+            left: calc(var(--move) * -1);
+            z-index: 0;
+            content: 'PHOTO.BOOTH';
+            color: rgba(255, 255, 0, .2);
+            animation: moveRight 2s infinite;
+        }
+    }
+
+    h2,
+    h4 {
+        color: #9b3966;
+        font-size: 1.5em;
+        font-weight: 400;
+    }
+
+    @keyframes moveLeft {
+
+        0% {
+            left: var(--move);
+        }
+
+        50% {
+            left: 1px;
+        }
+
+        100% {
+            left: var(--move);
+        }
+    }
+
+    @keyframes moveRight {
+
+        0% {
+            left: calc(var(--move) * -1);
+        }
+
+        50% {
+            left: -1px;
+        }
+
+        100% {
+            left: calc(var(--move) * -1);
+        }
+    }
+}
+
+.qr {
+    width: 100%;
+    max-width: 40vh;
+}

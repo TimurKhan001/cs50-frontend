@@ -1,0 +1,29 @@
+@font-face {
+    font-family: 'Cera Pro';
+    src: url('https://embed.90th.bricks.plus/fonts/Cera_Pro_Light.woff') format('woff');
+    font-weight: 200;
+}
+
+@font-face {
+    font-family: 'Cera Pro';
+    src: url('https://embed.90th.bricks.plus/fonts/Cera_Pro_Regular.woff') format('woff');
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'Cera Pro';
+    src: url('https://embed.90th.bricks.plus/fonts/Cera_Pro_Medium.woff') format('woff');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Cera Pro';
+    src: url('https://embed.90th.bricks.plus/fonts/Cera_Pro_Bold.woff') format('woff');
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: 'Cera Pro';
+    src: url('https://embed.90th.bricks.plus/fonts/Cera_Pro_Black.woff') format('woff');
+    font-weight: 900;
+}

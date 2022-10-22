@@ -1,0 +1,8 @@
+{
+    "*.{js,jsx}": [
+      "eslint --cache --fix"
+    ],
+    "*.css": [
+      "stylelint --cache --fix --color --formatter verbose"
+    ]
+}

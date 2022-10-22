@@ -1,0 +1,21 @@
+.button {
+    --color: #6cba73;
+    --borderColor: #fff;
+    width: 60vw;
+    margin-bottom: 3vh;
+    padding: 20px 30px;
+    cursor: pointer;
+    background: #e7e8ea;
+    color: var(--borderColor);
+    font-size: 5vw;
+    font-weight: 700;
+    text-transform: uppercase;
+    box-shadow: 20px 20px 60px #c4c5c7, -20px -20px 60px #fff;
+    border-radius: 50px;
+    border: none;
+
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
+}

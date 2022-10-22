@@ -1,0 +1,79 @@
+src/gatsby-types.d.ts
+src/**/*.css.d.ts
+
+# Dependency directories
+/vendor
+/node_modules
+/*/node_modules
+/bower_components
+/jspm_packages
+
+# Build
+dist/
+build/
+public/
+_tests/**/_coverage
+
+# Logs
+logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Cache
+.next
+.cache
+
+# Project files
+.yarn-integrity
+.eslintcache
+.env
+.env.*
+!.env.sample
+.git
+behat.yml
+localhost.json
+.husky/.gitignore
+
+# System files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+.fseventsd
+
+
+# Editors
+/.idea
+modules.xml
+*.ipr
+*.iml
+nbproject
+*.sublime-project
+*.sublime-workspace
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Others
+/doc
+token.json
+/src/data
+
+#awsamplifyjs
+amplify/\#current-cloud-backend
+aws-info.json
+local-env-info.json
+aws-exports.*
+amplify/backend/function/*/src/node_modules/
+amplify/backend/function/*/dist/
+src/aws-exports.js
+apollo.config.js
+local.graphql
