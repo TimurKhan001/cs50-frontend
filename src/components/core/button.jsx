@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import styles from './button.css';
 
@@ -8,11 +9,12 @@ const Button = ({
     handleClick,
     hasATag,
     href,
+    disabled,
 }) => (
     <button
-        onClick={handleClick}
+        onClick={disabled ? () => {} : handleClick}
         style={{'--borderColor': `${borderColor}`, '--color': `${color}`}}
-        className={styles.button}
+        className={clsx(styles.button, disabled && styles.disabled)}
     >
         {
             hasATag
@@ -29,6 +31,7 @@ Button.propTypes = {
     handleClick: PropTypes.func,
     hasATag: PropTypes.bool,
     href: PropTypes.string,
+    disabled: PropTypes.bool,
 };
 
 export default Button;

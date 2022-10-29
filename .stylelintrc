@@ -1,5 +1,6 @@
 {
-  "extends": ["@digitalvisioncz/stylelint-config/config"],
+  "rules": {
+  },
   "ignoreFiles": [
     "**/*.js",
     "**/*.jsx"

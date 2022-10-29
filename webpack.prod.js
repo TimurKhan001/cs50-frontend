@@ -7,7 +7,7 @@ module.exports = merge(common, {
     mode: 'production',
     plugins: [
         new webpack.DefinePlugin({
-            BASE_URL: JSON.stringify('https://harry-potter.london-flagship-store.bricks.plus/'),
+            BASE_URL: JSON.stringify('/'),
         }),
     ],
     optimization: {

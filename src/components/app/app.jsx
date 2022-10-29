@@ -1,9 +1,12 @@
 import PropTypes from 'prop-types';
 import useMobileDetect from 'use-mobile-detect-hook';
-import {useState} from 'react';
+import {
+    useState
+} from 'react';
 import CameraWrapper from '../layout/camera';
 import MainMenu from '../layout/mainMenu/mainMenu';
 import getLocales from '../../helpers/language';
+import Gallery from '../layout/gallery/gallery';
 import styles from './app.css';
 
 const Home = ({lang, assetsUrl}) => {
@@ -19,7 +22,8 @@ const Home = ({lang, assetsUrl}) => {
                 ? (
                     <>
                         {step === 1 && <MainMenu setStep={setStep}/>}
-                        {step === 2 && <CameraWrapper lang={lang} assetsUrl={assetsUrl}/>}
+                        {step === 2 && <CameraWrapper lang={lang} assetsUrl={assetsUrl} setStep={setStep}/>}
+                        {step === 3 && <Gallery setStep={setStep}/>}
 
                     </>
                 ) : (

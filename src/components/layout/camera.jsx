@@ -14,13 +14,13 @@ import {
     Instagram as PhotoIcon,
     RotateCameraRight as RotateCameraRightIcon,
     ArrowLeft as ArrowLeftIcon,
-    ArrowRight as ArrowRightIcon
+    ArrowRight as ArrowRightIcon,
+    Download as DownloadIcon
 } from 'iconoir-react';
 import ControlsButton from '../core/controlsButton';
 import Button from '../core/button';
 import overlayArray from '../../assets/base64';
 import getLocales from '../../helpers/language';
-import sharePhoto from '../../helpers/sharePhoto';
 import styles from './camera.css';
 
 const resizeFile = (file, width, height) => new Promise(resolve => {
@@ -38,7 +38,7 @@ const resizeFile = (file, width, height) => new Promise(resolve => {
     );
 });
 
-const CameraWrapper = ({lang, assetsUrl}) => {
+const CameraWrapper = ({lang, assetsUrl, setStep}) => {
     const [cameraSide, setCameraSide] = useState('user');
     const [overlay, setOverlay] = useState(0);
     const [image, setImage] = useState('');
@@ -48,6 +48,7 @@ const CameraWrapper = ({lang, assetsUrl}) => {
     const [wrapperHeight, setWrapperHeight] = useState('initial');
     const [isResizing, setIsResizing] = useState(false);
     const [isLoading, setIsloading] = useState(false);
+    const [isSavedFile, setIsSavedFile] = useState(false);
 
     const webcamRef = useRef(null);
     const gliderRef = useRef(null);
@@ -78,9 +79,26 @@ const CameraWrapper = ({lang, assetsUrl}) => {
 
         const b64 = await mergeImages([img1, resizedImg], {...imageDimensions, format: 'image/jpeg'});
 
-        await sharePhoto(b64);
+        const blob = await (await fetch(b64)).blob();
+        const file = new File([blob], 'image.jpg', {type: blob.type});
 
-        setIsResizing(false);
+        let formData = new FormData();
+            formData.append('file', file);
+            formData.append('id', sessionStorage.getItem('userId'));
+
+        fetch('http://127.0.0.1:5000/photos', {
+            method: 'POST',
+            body: formData
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.status === 'success') {
+                setIsSavedFile(true);
+                setIsResizing(false);
+            } else {
+                console.log('error');
+            }
+        });
     };
 
     useEffect(() => {
@@ -129,8 +147,8 @@ const CameraWrapper = ({lang, assetsUrl}) => {
                     >
                         <div className={styles.spinner}></div>
                     </div>
-                    <div className={styles.glassMenu}>
-                        <span>Menu</span>
+                    <div onClick={() => {setStep(1)}} className={styles.glassMenu}>
+                        <ArrowLeftIcon className={styles.backToMenuIcon}/><span>Menu</span>
                     </div>
                     <div
                         ref={cameraWrapperRef}
@@ -180,7 +198,7 @@ const CameraWrapper = ({lang, assetsUrl}) => {
                             <div className={styles.buttonLeft}>
                                 <ControlsButton
                                     size={14}
-                                    color='#000000'
+                                    color='#505050'
                                     Icon={ArrowLeftIcon}
                                     handleClick={() => {
                                         gliderRef.current.swiper.slidePrev();
@@ -192,13 +210,13 @@ const CameraWrapper = ({lang, assetsUrl}) => {
                         <div className={styles.photoButtons}>
                             <ControlsButton
                                 size={12}
-                                color='#202020'
+                                color='#505050'
                                 Icon={RotateCameraRightIcon}
                                 handleClick={changeCamera}
                             />
                             <ControlsButton
                                 size={14}
-                                color='#202020'
+                                color='#505050'
                                 Icon={PhotoIcon}
                                 handleClick={() => {
                                     setIsPageTransfer(true);
@@ -217,7 +235,7 @@ const CameraWrapper = ({lang, assetsUrl}) => {
                             <div className={styles.buttonRight}>
                                 <ControlsButton
                                     size={14}
-                                    color='#000000'
+                                    color='#505050'
                                     Icon={ArrowRightIcon}
                                     handleClick={() => {
                                         gliderRef.current.swiper.slideNext();
@@ -248,20 +266,27 @@ const CameraWrapper = ({lang, assetsUrl}) => {
                     </div>
 
                     <div className={styles.finishButtons}>
-                        <Button
-                            text={getLocales(lang, 'saveButton')}
+                            <Button
+                            // text={getLocales(lang, 'saveButton')}
+                            text={isSavedFile ? 'photo is in gallery' : 'save to gallery'}
+                            Icon={DownloadIcon}
                             color='transparent'
-                            borderColor='#202020'
+                            borderColor='#505050'
                             handleClick={() => {
-                                saveImage(image, overlayArray[overlay]);
+                                if (!isResizing) {
+                                    saveImage(image, overlayArray[overlay]);
+                                }
+                                
                             }}
+                            disabled={isSavedFile || isResizing}
                         />
                         <Button
                             text={getLocales(lang, 'backButton')}
                             color='transparent'
-                            borderColor='#202020'
+                            borderColor='#505050'
                             handleClick={() => {
                                 setImage('');
+                                setIsSavedFile(false);
                             }}
                         />
                     </div>
@@ -274,6 +299,7 @@ const CameraWrapper = ({lang, assetsUrl}) => {
 CameraWrapper.propTypes = {
     lang: PropTypes.string,
     assetsUrl: PropTypes.string,
+    setStep: PropTypes.func,
 };
 
 export default CameraWrapper;

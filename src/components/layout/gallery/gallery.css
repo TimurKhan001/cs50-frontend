@@ -1,0 +1,105 @@
+/* stylelint-disable selector-max-type */
+
+.mainWrapper {
+    --move: 10px;
+    width: 100%;
+    height: 100%;
+    padding: 20vw 5vw 10vw;
+    gap: 6vw;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    align-content: flex-start;
+    position: relative;
+    overflow: scroll;
+
+    .fullscreenImage {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(10, 10, 10, .5);
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        display: none;
+        z-index: 1;
+
+        & * {
+            color: rgba(255, 255, 255)!important;
+        }
+
+        .downloadIcon {
+            position: absolute;
+            bottom: 3vw;
+            left: 4vw;
+            width: 17vw;
+            height: 17vw;
+        }
+    }
+
+    .showImage {
+        display: initial;
+    }
+
+    .backButton {
+        position: absolute;
+        top: 5vw;
+        left: 5vw;
+        display: flex;
+        align-items: center;
+
+        span {
+            font-size: 3vw;
+            margin-left: 1.5vw;
+        }
+    }
+
+    .backButton * {
+        color: #505050;
+    }
+
+    .backIcon {
+        width: 8vw;
+        height: 8vw;
+    }
+
+    .imageWrapper {
+        width: 45%;
+        position: relative;
+    }
+
+    .closeIcon {
+        width: 5vw;
+        height: 5vw;
+        position: absolute;
+        top: 1vw;
+        right: 1vw;
+    }
+
+    img {
+        width: 100%;
+        object-fit: contain;
+    }
+
+    dialog {
+        height: 45vh;
+        
+        .dialogContent {
+            height: 100%;
+            display: flex;
+            flex-flow: column nowrap;
+            gap: 0.6vw;
+            justify-content: center;
+            align-items: center;
+            
+
+            h1 {
+                font-size: 5vw;
+                text-align: center;
+                margin-bottom: 10vw;
+            }
+        }
+    }
+}

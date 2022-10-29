@@ -19,3 +19,7 @@
         text-decoration: none;
     }
 }
+
+.disabled {
+    opacity: .4;
+}
