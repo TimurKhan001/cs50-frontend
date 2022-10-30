@@ -13,6 +13,30 @@
     position: relative;
     overflow: scroll;
 
+    h2 {
+        font-size: 5vw;
+        color: #505050;
+    }
+
+    .spinner {
+        width: 20vw;
+        height: 20vw;
+        display: inline-block;
+        animation: spin 1s ease-in-out infinite;
+        border-radius: 50%;
+        border: 5px solid rgba(255, 255, 255, .3);
+        border-top-color: #fff;
+        position: absolute;
+        top: 20%;
+        left: 40%;
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
     .fullscreenImage {
         position: fixed;
         top: 0;
@@ -34,8 +58,8 @@
             position: absolute;
             bottom: 3vw;
             left: 4vw;
-            width: 17vw;
-            height: 17vw;
+            width: 14vw;
+            height: 14vw;
         }
     }
 
@@ -46,7 +70,7 @@
     .backButton {
         position: absolute;
         top: 5vw;
-        left: 5vw;
+        left: 3vw;
         display: flex;
         align-items: center;
 
@@ -71,8 +95,8 @@
     }
 
     .closeIcon {
-        width: 5vw;
-        height: 5vw;
+        width: 7vw;
+        height: 7vw;
         position: absolute;
         top: 1vw;
         right: 1vw;

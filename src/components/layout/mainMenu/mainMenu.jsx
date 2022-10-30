@@ -3,23 +3,36 @@
 import PropTypes from 'prop-types';
 import {useRef, useEffect, useState} from 'react';
 import { useForm } from "react-hook-form";
+import {
+    Cancel as CloseIcon,
+    LogOut as LogOutIcon
+} from 'iconoir-react';
+import formErrors from '../../../configs/formErrors';
+import getLocales from '../../../helpers/language';
 import styles from './mainMenu.css';
 
-const MainMenu = ({setStep}) => {
+
+const MainMenu = ({lang, setStep}) => {
     const dialogRef = useRef(null);
-    const isLoggedIn = sessionStorage.getItem('userId');
     const [dialogPage, setDialogPage] = useState('login') // 'login' or 'register'
     const [submitError, setSumbitError] = useState(null);
-    const { register, handleSubmit, reset, formState: { errors } } = useForm();
+    const [isSuccessfulRegistration, setIsSuccessfulRegistration] = useState(false);
+    const [userId, setUserId] = useState(JSON.parse(localStorage.getItem('userId')));
+    const { register, handleSubmit, reset, formState: { errors }, clearErrors} = useForm();
+
+    useEffect(() => {
+        localStorage.setItem('userId', JSON.stringify(userId));
+      }, [userId]);
 
     useEffect(() => {
         const dialog = dialogRef.current;
 
         const clickOutside = e => {
             const rect = dialog.getBoundingClientRect();
-
+            
             if (e.clientY < rect.top || e.clientY > rect.bottom || e.clientX < rect.left || e.clientX > rect.right) {
                 dialog.close();
+                setDialogPage('login')
             }
         };
 
@@ -31,11 +44,10 @@ const MainMenu = ({setStep}) => {
     }, []);
 
     const onRegisterSubmit = (data) => {
-        fetch('http://127.0.0.1:5000/register', {
+        fetch(`${API_URL}/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
-                // 'Content-Type': 'application/x-www-form-urlencoded',
               },
             body: JSON.stringify({
                 username: data.register_username,
@@ -47,7 +59,12 @@ const MainMenu = ({setStep}) => {
             if (data.status === 'success') {
                 setSumbitError(null);
                 reset();
-                setDialogPage('login');
+                setIsSuccessfulRegistration(true);
+                setTimeout(() => {
+                    setDialogPage('login');
+                    setIsSuccessfulRegistration(false);
+                }, 1600)
+                
             } else {
                 setSumbitError(data.status)
             }
@@ -55,11 +72,10 @@ const MainMenu = ({setStep}) => {
     }
 
     const onLoginSubmit = (data) => {
-        fetch('http://127.0.0.1:5000/login', {
+        fetch(`${API_URL}/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
-                // 'Content-Type': 'application/x-www-form-urlencoded',
               },
             body: JSON.stringify({
                 username: data.login_username,
@@ -69,7 +85,7 @@ const MainMenu = ({setStep}) => {
         .then((response) => response.json())
         .then((data) => {
             if (data.status === 'success') {
-                sessionStorage.setItem('userId', data.id);
+                setUserId(data.id);
                 setSumbitError(null);
                 reset();
                 dialogRef.current.close();
@@ -83,72 +99,99 @@ const MainMenu = ({setStep}) => {
         <>  
             <div className={styles.mainWrapper}>
                 <h1>PHOTO.BOOTH</h1>
-                {isLoggedIn ? (
+                {userId ? (
                     <>
-                    <button onClick={() => {setStep(2);}}>Take a photo</button>
-                    <button onClick={() => {setStep(3);}}>Gallery</button>
+                    <button onClick={() => {setStep(2);}}>{getLocales(lang, 'takePhoto')}</button>
+                    <button onClick={() => {setStep(3);}}>{getLocales(lang, 'gallery')}</button>
+                    <div 
+                        onClick={() => {
+                            setUserId(null);
+                        }} 
+                        className={styles.logoutIconWrapper}>
+                        <LogOutIcon className={styles.logoutIcon}/><span>{getLocales(lang, 'logOut')}</span> 
+                    </div> 
                     </>
                 ) : (
                     <>
-                    <button onClick={() => {dialogRef.current.showModal();}} >Sign in</button>
-                    <button onClick={() => {setStep(2);}}>Take a photo</button>
+                    <button onClick={() => {dialogRef.current.showModal();}}>{getLocales(lang, 'signIn')}</button>
                     </>
                 )}
-
             </div>
             <dialog
                 ref={dialogRef}
             >
             {dialogPage === 'login' && (
                 <div className={styles.dialogContent}>
-                    <h1>Sign In</h1>
+                    <CloseIcon onClick={() => {dialogRef.current.close(); setDialogPage('login');}} className={styles.closeIcon}/>
+                    <h1>{getLocales(lang, 'signIn')}</h1>
                     <form onSubmit={handleSubmit(onLoginSubmit)}>
-                        <label htmlFor="username">Username</label>
+                        <label htmlFor="username">{getLocales(lang, 'username')}</label>
                         <input
                             name="username"
                             type="text"
-                            {...register("login_username", { required: true })}
+                            {...register("login_username", { required: getLocales(lang, 'usernameRequired')})}
                         />
-                        <label htmlFor="password">Password</label>
+                        <label htmlFor="password">{getLocales(lang, 'password')}</label>
                         <input
                             name="password"
                             type="password"
-                            {...register("login_password", { required: true })}
+                            {...register("login_password", { required: getLocales(lang, 'passwordRequired')})}
                         />
-                        {submitError && <span>{submitError}</span>}
-                        <button className={styles.button} onClick={() => {}}>Sign In</button>
-                        <span onClick={() => {setDialogPage('register')}}>New Registration</span>
+                        {errors.login_password && <span>{errors.login_password.message}</span>}
+                        {errors.login_username && <span>{errors.login_username.message}</span>}
+                        {submitError && <span>{formErrors[submitError]}</span>}
+                        <button className={styles.button} onClick={() => {}}>{getLocales(lang, 'signIn')}</button>
+                        <span 
+                            onClick={() => {
+                                setDialogPage('register'); 
+                                reset(); 
+                                clearErrors(); 
+                                setSumbitError(null)
+                                }}>
+                                    {getLocales(lang, 'newRegistration')}
+                        </span>
                     </form>
                 </div>
             )}
             {dialogPage === 'register' && (
                 <div className={styles.dialogContent}>
-                    <h1>Registration</h1>
+                    <CloseIcon onClick={() => {dialogRef.current.close(); setDialogPage('login');}} className={styles.closeIcon}/>
+                    <h1>{getLocales(lang, 'registration')}</h1>
                     <form onSubmit={handleSubmit(onRegisterSubmit)}>
-                        <label htmlFor="username">Username</label>
+                        <label htmlFor="username">{getLocales(lang, 'username')}</label>
                         <input
                             name="username"
                             type="text"
-                            {...register("register_username", { required: 'Username is required' })}
+                            {...register("register_username", { required: getLocales(lang, 'usernameRequired')})}
                             required
                         />
-                        <label htmlFor="password">Password</label>
+                        <label htmlFor="password">{getLocales(lang, 'password')}</label>
                         <input
                             name="password"
                             type="password"
                             {...register("register_password", 
                                 { 
-                                    required: 'Password is reguired', 
+                                    required: getLocales(lang, 'passwordRequired'), 
                                     minLength: {
-                                        value: 10,
-                                        message: "Password must be at least 8 characters long."
+                                        value: 8,
+                                        message: getLocales(lang, 'passwordLength')
                                       } 
                                 })}
                         />
                         {errors.register_password && <span>{errors.register_password.message}</span>}
                         {errors.register_username && <span>{errors.register_username.message}</span>}
-                        {submitError && <span>{submitError}</span>}
-                        <button type='submit' className={styles.button}>Register</button>
+                        {submitError && <span>{formErrors[submitError]}</span>}
+                        {isSuccessfulRegistration && <span>{getLocales(lang, 'registrationSuccess')}</span>}
+                        <button type='submit' className={styles.button}>{getLocales(lang, 'register')}</button>
+                        <span 
+                            onClick={() => {
+                                setDialogPage('login'); 
+                                reset(); 
+                                clearErrors(); 
+                                setSumbitError(null)
+                                }}>
+                                    {getLocales(lang, 'backToLogin')}
+                        </span>
                     </form>
                 </div>
             )}
@@ -158,6 +201,7 @@ const MainMenu = ({setStep}) => {
 };
 
 MainMenu.propTypes = {
+    lang: PropTypes.string,
     setStep: PropTypes.func,
 };
 

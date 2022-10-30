@@ -21,10 +21,9 @@ const Home = ({lang, assetsUrl}) => {
             {!detectMobile.isDesktop()
                 ? (
                     <>
-                        {step === 1 && <MainMenu setStep={setStep}/>}
+                        {step === 1 && <MainMenu lang={lang} setStep={setStep}/>}
                         {step === 2 && <CameraWrapper lang={lang} assetsUrl={assetsUrl} setStep={setStep}/>}
-                        {step === 3 && <Gallery setStep={setStep}/>}
-
+                        {step === 3 && <Gallery lang={lang} setStep={setStep}/>}
                     </>
                 ) : (
                     <div className={styles.desktop}>

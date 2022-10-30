@@ -8,6 +8,7 @@ module.exports = merge(common, {
     plugins: [
         new webpack.DefinePlugin({
             BASE_URL: JSON.stringify('/'),
+            API_URL: JSON.stringify('https://photo-app-cs50.herokuapp.com'),
         }),
     ],
     optimization: {

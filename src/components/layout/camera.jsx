@@ -84,9 +84,9 @@ const CameraWrapper = ({lang, assetsUrl, setStep}) => {
 
         let formData = new FormData();
             formData.append('file', file);
-            formData.append('id', sessionStorage.getItem('userId'));
+            formData.append('id', localStorage.getItem('userId'));
 
-        fetch('http://127.0.0.1:5000/photos', {
+        fetch(`${API_URL}/photos`, {
             method: 'POST',
             body: formData
         })
@@ -267,16 +267,14 @@ const CameraWrapper = ({lang, assetsUrl, setStep}) => {
 
                     <div className={styles.finishButtons}>
                             <Button
-                            // text={getLocales(lang, 'saveButton')}
-                            text={isSavedFile ? 'photo is in gallery' : 'save to gallery'}
+                            text={isSavedFile ? getLocales(lang, 'savedButton') : getLocales(lang, 'saveButton')}
                             Icon={DownloadIcon}
                             color='transparent'
                             borderColor='#505050'
                             handleClick={() => {
                                 if (!isResizing) {
                                     saveImage(image, overlayArray[overlay]);
-                                }
-                                
+                                }  
                             }}
                             disabled={isSavedFile || isResizing}
                         />

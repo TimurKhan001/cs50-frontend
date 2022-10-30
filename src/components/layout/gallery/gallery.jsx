@@ -9,10 +9,11 @@ import {
 } from 'iconoir-react';
 import Button from '../../core/button';
 import {saveAs} from 'file-saver';
+import getLocales from '../../../helpers/language';
 import styles from './gallery.css';
 
 const getUserPhotos = (userId, setPhotos) => {
-    fetch('http://127.0.0.1:5000/user_photos', {
+    fetch(`${API_URL}/user_photos`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -32,11 +33,10 @@ const getUserPhotos = (userId, setPhotos) => {
     });
 }
 
-
-const Gallery = ({setStep}) => {
+const Gallery = ({lang, setStep}) => {
     const dialogRef = useRef(null);
     const showImageRef = useRef(null);
-    const userId = sessionStorage.getItem('userId');
+    const userId = localStorage.getItem('userId');
     const [photos, setPhotos] = useState(null);
     const [deletePhotoId, setDeletePhotoId] = useState(null);
     const [showPhoto, setShowPhoto] = useState(null);
@@ -64,7 +64,7 @@ const Gallery = ({setStep}) => {
     }, [userId]);
 
     const handleDeleteClick = () => {
-        fetch('http://127.0.0.1:5000/photos', {
+        fetch(`${API_URL}/photos`, {
             method: 'Delete',
             headers: {
                 'Content-Type': 'application/json'
@@ -101,7 +101,7 @@ const Gallery = ({setStep}) => {
                 <ArrowLeftIcon className={styles.backIcon}/> <span>Back to menu</span>
                 </div>
                 {!photos && (
-                    <h1>Loading</h1>
+                    <div className={styles.spinner}></div>
                 )}
                 {photos && photos.length === 0 && (
                     <h2>Nothing here yet</h2>
@@ -144,6 +144,7 @@ const Gallery = ({setStep}) => {
 };
 
 Gallery.propTypes = {
+    lang: PropTypes.string,
     setStep: PropTypes.func,
 };
 

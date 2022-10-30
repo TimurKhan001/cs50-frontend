@@ -7,7 +7,7 @@ const sharePhoto = async b64 => {
     if (navigator.canShare({files: [file]})) {
         try {
             navigator.share({
-                title: 'Lego Photo App',
+                title: 'Photo App',
                 text: 'Share or save your photo!',
                 files: [file],
             });

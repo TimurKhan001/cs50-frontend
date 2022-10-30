@@ -6,6 +6,4 @@ export default [
     'images/overlays/5.png',
     'images/overlays/6.png',
     'images/overlays/7.png',
-    // 'images/overlays/8.png',
-    // 'images/overlays/9.png',
 ];
