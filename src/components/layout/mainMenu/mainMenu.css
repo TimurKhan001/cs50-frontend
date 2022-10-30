@@ -133,6 +133,7 @@
 
 dialog {
     width: 90vw;
+    min-height: 65vh;
     background: #e7e8ea;
     border-radius: 30px;
     border: none;
