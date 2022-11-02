@@ -76,8 +76,6 @@ const CameraWrapper = ({lang, assetsUrl, setStep}) => {
             .then(response => response.blob())
             .then(blob => resizeFile(blob, sizeImg.width, sizeImg.height));
         
-     
-
         const imageDimensions = {width: sizeImg.width, height: sizeImg.height};
  
         const b64 = await mergeImages([img1, resizedImg], {...imageDimensions, format: 'image/jpeg'});
@@ -109,7 +107,6 @@ const CameraWrapper = ({lang, assetsUrl, setStep}) => {
             return;
         }
         const video = webcamRef;
-        // console.log(video);
         if (video.video.videoWidth > video.video.videoHeight) {
             setAspectRatio(3 / 4);
         } else {
@@ -117,7 +114,7 @@ const CameraWrapper = ({lang, assetsUrl, setStep}) => {
         }
 
         setWrapperHeight(video.video.offsetHeight);
-    }, [webcamRef]);
+    }, [hasStream]);
 
     useLayoutEffect(() => {
         if (buttonsRef.current && cameraWrapperRef.current) {
@@ -136,7 +133,6 @@ const CameraWrapper = ({lang, assetsUrl, setStep}) => {
         setImage(imageSrc);
       }, [webcamRef]);
 
-    
     
     return (
         <>
