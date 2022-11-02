@@ -2,7 +2,8 @@ import {
     useRef,
     useState,
     useEffect,
-    useLayoutEffect
+    useLayoutEffect,
+    useCallback,
 } from 'react';
 import Webcam from 'react-webcam';
 import mergeImages from 'merge-images';
@@ -50,7 +51,7 @@ const CameraWrapper = ({lang, assetsUrl, setStep}) => {
     const [isLoading, setIsloading] = useState(false);
     const [isSavedFile, setIsSavedFile] = useState(false);
 
-    const webcamRef = useRef(null);
+    const [webcamRef, setWebcamRef] = useState(null);
     const gliderRef = useRef(null);
     const cameraWrapperRef = useRef(null);
     const buttonsRef = useRef(null);
@@ -66,25 +67,27 @@ const CameraWrapper = ({lang, assetsUrl, setStep}) => {
 
     const saveImage = async (img1, img2) => {
         setIsResizing(true);
-
+  
         const sizeImg = new Image();
-
+        
         sizeImg.src = img1;
 
-        const resizedImg = await fetch(img2)
+        const resizedImg = await fetch(`/${img2}`)
             .then(response => response.blob())
             .then(blob => resizeFile(blob, sizeImg.width, sizeImg.height));
+        
+     
 
         const imageDimensions = {width: sizeImg.width, height: sizeImg.height};
-
+ 
         const b64 = await mergeImages([img1, resizedImg], {...imageDimensions, format: 'image/jpeg'});
 
         const blob = await (await fetch(b64)).blob();
         const file = new File([blob], 'image.jpg', {type: blob.type});
 
-        let formData = new FormData();
-            formData.append('file', file);
-            formData.append('id', localStorage.getItem('userId'));
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('id', localStorage.getItem('userId'));
 
         fetch(`${API_URL}/photos`, {
             method: 'POST',
@@ -102,12 +105,11 @@ const CameraWrapper = ({lang, assetsUrl, setStep}) => {
     };
 
     useEffect(() => {
-        if (!webcamRef.current) {
+        if (!webcamRef) {
             return;
         }
-
-        const video = webcamRef.current;
-
+        const video = webcamRef;
+        // console.log(video);
         if (video.video.videoWidth > video.video.videoHeight) {
             setAspectRatio(3 / 4);
         } else {
@@ -115,7 +117,7 @@ const CameraWrapper = ({lang, assetsUrl, setStep}) => {
         }
 
         setWrapperHeight(video.video.offsetHeight);
-    }, [hasStream]);
+    }, [webcamRef]);
 
     useLayoutEffect(() => {
         if (buttonsRef.current && cameraWrapperRef.current) {
@@ -129,6 +131,13 @@ const CameraWrapper = ({lang, assetsUrl, setStep}) => {
         }
     });
 
+    const capture = useCallback(() => {
+        const imageSrc = webcamRef.getScreenshot();
+        setImage(imageSrc);
+      }, [webcamRef]);
+
+    
+    
     return (
         <>
             {(!hasStream || isResizing) && (
@@ -156,10 +165,9 @@ const CameraWrapper = ({lang, assetsUrl, setStep}) => {
                         style={{height: wrapperHeight}}
                     >
                         <Webcam
-                            ref={webcamRef}
+                            ref={(e) => setWebcamRef(e)}
                             audio={false}
                             controls={false}
-
                             imageSmoothing={true}
                             screenshotFormat="image/jpeg"
                             mirrored={cameraSide === 'user'}
@@ -221,9 +229,7 @@ const CameraWrapper = ({lang, assetsUrl, setStep}) => {
                                 handleClick={() => {
                                     setIsPageTransfer(true);
 
-                                    const imageSrc = webcamRef.current.getScreenshot();
-
-                                    setImage(imageSrc);
+                                    capture();
 
                                     setTimeout(() => {
                                         setIsPageTransfer(false);
